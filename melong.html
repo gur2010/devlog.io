@@ -3,80 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>지능 지수 테스트 결과</title>
+    <title>심리 테스트 결과</title>
     <style>
-        body { margin: 0; padding: 0; width: 100vw; height: 100vh; background-color: #f0f0f0; overflow: hidden; display: flex; justify-content: center; align-items: center; font-family: sans-serif; touch-action: none; transition: background-color 0.1s; }
-        .header { position: fixed; top: 10%; text-align: center; width: 90%; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 10; }
-        #run-btn { position: absolute; padding: 20px 40px; font-size: 20px; font-weight: bold; background: #007AFF; color: white; border: none; border-radius: 12px; box-shadow: 0 8px 0 #0051a8; cursor: pointer; z-index: 999; top: 50%; left: 50%; transform: translate(-50%, -50%); -webkit-tap-highlight-color: transparent; }
-        .bg-flash { animation: flash 0.1s infinite; }
-        @keyframes flash { 0% { background: #ff0000; } 50% { background: #ffff00; } 100% { background: #00ff00; } }
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            touch-action: none;
+        }
+
+        .header {
+            position: fixed;
+            top: 10%;
+            text-align: center;
+            width: 90%;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 { color: #333; margin: 0; font-size: 1.2rem; }
+        p { color: #666; font-size: 0.9rem; margin-top: 10px; }
+
+        #run-btn {
+            position: absolute;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 8px 0 #0051a8;
+            cursor: pointer;
+            z-index: 999;
+            transition: transform 0.1s;
+            /* 초기 위치 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #run-btn:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        /* 킹받는 애니메이션 배경 */
+        .bg-flash {
+            animation: flash 0.1s infinite;
+        }
+
+        @keyframes flash {
+            0% { background: #ff0000; }
+            50% { background: #ffff00; }
+            100% { background: #00ff00; }
+        }
     </style>
 </head>
 <body id="main-body">
 
     <div class="header">
-        <h2>당신의 IQ 테스트 결과</h2>
+        <h2>당신의 지능 지수(IQ) 테스트</h2>
         <p>아래 [테스트 시작] 버튼을 누르면 즉시 시작됩니다.</p>
     </div>
 
-    <button id="run-btn" onclick="handleClick()">테스트 시작</button>
+    <button id="run-btn">테스트 시작</button>
 
     <script>
         const btn = document.getElementById('run-btn');
         const body = document.getElementById('main-body');
-        let clickCount = 0;
 
         const trollingMsgs = [
-            "드디어 잡았네? ㅋㅋㅋ", "축하해! 근데 이제 시작이야", "확인 누르면 꺼질 것 같지?",
-            "너 지금 당황했지? ㅋㅋ", "폰 고장난거 아니니까 계속 눌러봐", "무한 동력 가동!!",
-            "아직도 누르고 있어?", "손가락 안 아파?", "메롱메롱메롱", "탈출 불가!",
-            "이 창은 영원히 닫히지 않습니다", "포기하면 편해", "응 아니야~", "열받쥬? ㅋㅋ"
+            "어라? 못 누르네? ㅋㅋㅋ",
+            "진짜 못 누르는 거야? ㄷㄷ",
+            "너 혹시 손가락이 3개니?",
+            "와... 방금 아까웠다 ㅋ",
+            "포기하면 편해 임마",
+            "이걸 못 눌러서 IQ 테스트 하겠어?",
+            "반응속도 실화냐? 거북이인줄",
+            "메롱메롱메롱메롱",
+            "님 폰 해킹됨 ㅅㄱ (구라임)",
+            "이 창은 영원히 닫히지 않습니다."
         ];
 
-        const btnTexts = ["메롱", "까비", "요기있네", "응 못눌러", "킹받지?"];
-
-        // 버튼 이동 (희망고문)
-        function moveButton() {
+        // 버튼 도망가기 로직
+        const moveButton = () => {
             const maxX = window.innerWidth - btn.offsetWidth;
             const maxY = window.innerHeight - btn.offsetHeight;
-            btn.style.left = Math.random() * maxX + 'px';
-            btn.style.top = Math.random() * maxY + 'px';
-            btn.style.transform = 'none';
-            btn.innerText = btnTexts[Math.floor(Math.random() * btnTexts.length)];
-        }
 
-        // 무한 알림창 공격 (브라우저 차단 방지용 예약 방식)
-        function infiniteAlert() {
-            const msg = trollingMsgs[Math.floor(Math.random() * trollingMsgs.length)];
-            alert(msg);
-            // 확인을 누르면 0.1초 뒤에 다시 호출 (브라우저가 렉으로 판단하지 않게 함)
-            setTimeout(infiniteAlert, 100);
-        }
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
 
-        function handleClick() {
-            clickCount++;
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            btn.style.transform = 'none'; // 중앙 정렬 해제
             
-            if (clickCount < 6) {
-                alert("잡았다! (" + clickCount + "/6) \n분석 중... 더 빨리 눌러봐!");
-                moveButton();
-            } else {
-                // 6번째 클릭 시
-                body.classList.add('bg-flash');
-                btn.style.display = 'none';
-                document.getElementById('sub-msg').innerText = "분석 완료: 당신은 낚였습니다.";
-                
-                alert("테스트 완료! 결과를 발표합니다.");
-                infiniteAlert(); // 무한 루프 시작
-            }
-        }
+            // 버튼 텍스트 변경
+            btn.innerText = trollingMsgs[Math.floor(Math.random() * trollingMsgs.length)];
+        };
 
-        // 도망가기 (모바일 터치 대응)
+        // 터치하려고 하면 도망감
         btn.addEventListener('touchstart', (e) => {
-            if (clickCount < 6) {
-                e.preventDefault();
-                moveButton();
+            e.preventDefault();
+            moveButton();
+            
+            // 낮은 확률로 배경 깜빡임 (눈갱)
+            if(Math.random() > 0.7) {
+                body.classList.add('bg-flash');
+                setTimeout(() => body.classList.remove('bg-flash'), 500);
             }
         });
+
+        // 클릭 이벤트 (혹시나 잡혔을 때)
+        btn.addEventListener('click', () => {
+            // 무한 알림창 공격
+            alert("오.. 이걸 잡았네?");
+            for(let i = 0; i < 15; i++) {
+                alert(trollingMsgs[Math.floor(Math.random() * trollingMsgs.length)]);
+            }
+            moveButton();
+        });
+
     </script>
 </body>
 </html>
