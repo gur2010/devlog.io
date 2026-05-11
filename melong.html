@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>심리 테스트 결과</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            touch-action: none;
+        }
+
+        .header {
+            position: fixed;
+            top: 10%;
+            text-align: center;
+            width: 90%;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 { color: #333; margin: 0; font-size: 1.2rem; }
+        p { color: #666; font-size: 0.9rem; margin-top: 10px; }
+
+        #run-btn {
+            position: absolute;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 8px 0 #0051a8;
+            cursor: pointer;
+            z-index: 999;
+            transition: transform 0.1s;
+            /* 초기 위치 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #run-btn:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        /* 킹받는 애니메이션 배경 */
+        .bg-flash {
+            animation: flash 0.1s infinite;
+        }
+
+        @keyframes flash {
+            0% { background: #ff0000; }
+            50% { background: #ffff00; }
+            100% { background: #00ff00; }
+        }
+    </style>
+</head>
+<body id="main-body">
+
+    <div class="header">
+        <h2>당신의 지능 지수(IQ) 테스트</h2>
+        <p>아래 [테스트 시작] 버튼을 누르면 즉시 시작됩니다.</p>
+    </div>
+
+    <button id="run-btn">테스트 시작</button>
+
+    <script>
+        const btn = document.getElementById('run-btn');
+        const body = document.getElementById('main-body');
+
+        const trollingMsgs = [
+            "어라? 못 누르네? ㅋㅋㅋ",
+            "진짜 못 누르는 거야? ㄷㄷ",
+            "너 혹시 손가락이 3개니?",
+            "와... 방금 아까웠다 ㅋ",
+            "포기하면 편해 임마",
+            "이걸 못 눌러서 IQ 테스트 하겠어?",
+            "반응속도 실화냐? 거북이인줄",
+            "메롱메롱메롱메롱",
+            "님 폰 해킹됨 ㅅㄱ (구라임)",
+            "이 창은 영원히 닫히지 않습니다."
+        ];
+
+        // 버튼 도망가기 로직
+        const moveButton = () => {
+            const maxX = window.innerWidth - btn.offsetWidth;
+            const maxY = window.innerHeight - btn.offsetHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            btn.style.transform = 'none'; // 중앙 정렬 해제
+            
+            // 버튼 텍스트 변경
+            btn.innerText = "메롱";
+        };
+
+        // 터치하려고 하면 도망감
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+            
+            // 낮은 확률로 배경 깜빡임 (눈갱)
+            if(Math.random() > 0.7) {
+                body.classList.add('bg-flash');
+                setTimeout(() => body.classList.remove('bg-flash'), 500);
+            }
+        });
+
+        // 클릭 이벤트 (혹시나 잡혔을 때)
+        btn.addEventListener('click', () => {
+            // 무한 알림창 공격
+            alert("오.. 이걸 잡았네?");
+            for(let i = 0; i < 15; i++) {
+                alert(trollingMsgs[Math.floor(Math.random() * trollingMsgs.length)]);
+            }
+            moveButton();
+        });
+
+    </script>
+</body>
+</html>
